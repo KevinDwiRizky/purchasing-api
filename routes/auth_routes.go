@@ -9,4 +9,5 @@ import (
 func AuthRoutes(app *fiber.App) {
 	auth := app.Group("/api/v1/auth")
 	auth.Post("/register", controllers.Register)
+	auth.Post("/login", controllers.Login)
 }
