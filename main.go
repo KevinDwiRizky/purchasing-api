@@ -4,14 +4,14 @@ import (
 	"log"
 	"os"
 	"purchasing-api/config"
-	"purchasing-api/models"
+	"purchasing-api/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
 
 func main() {
-	
+
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, using system environment variables")
 	}
@@ -20,18 +20,15 @@ func main() {
 
 	config.ConnectDB()
 
-	config.DB.AutoMigrate(
-		&models.User{},
-		&models.Supplier{},
-		&models.Item{},
-		&models.Purchasing{},
-		&models.PurchasingDetail{},
-	)
+	// config.DB.AutoMigrate(
+	// 	&models.User{},
+	// 	&models.Supplier{},
+	// 	&models.Item{},
+	// 	&models.Purchasing{},
+	// 	&models.PurchasingDetail{},
+	// )
 
-	
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("API + DB connected")
-	})
+	routes.SetupRoutes(app)
 
 	port := os.Getenv("APP_PORT")
 	if port == "" {
