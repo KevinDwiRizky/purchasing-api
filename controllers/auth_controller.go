@@ -90,3 +90,23 @@ func Login(c *fiber.Ctx) error {
 
 	return utils.ResponseSuccess(c, 200, "Login berhasil", loginData)
 }
+
+func GetMe(c *fiber.Ctx) error {
+	userID := c.Locals("user_id")
+	if userID == nil {
+		return utils.ResponseError(c, 401, "Token tidak valid")
+	}
+
+	var user models.User
+	if err := config.DB.First(&user, userID).Error; err != nil {
+		return utils.ResponseError(c, 404, "User tidak ditemukan")
+	}
+
+	userData := fiber.Map{
+		"id":       user.ID,
+		"username": user.Username,
+		"role":     user.Role,
+	}
+
+	return utils.ResponseSuccess(c, 200, "Profil user", userData)
+}
